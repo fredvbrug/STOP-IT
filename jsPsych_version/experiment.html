@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html>
+<!--
+     _                    _ _
+ ___| |_ ___  _ __       (_) |_
+/ __| __/ _ \| '_ \ _____| | __|
+\__ \ || (_) | |_) |_____| | |_
+|___/\__\___/| .__/      |_|\__|
+             |_|
+AUTHORS: Luc Vermeylen & Frederick Verbruggen (2019)
+DESCRIPTION: This is the jsPsych version of the stop-signal task
+-->
+<head> <!-- import the jsPsych core library, specific plugins, jquery and some other scripts-->
+  <title>Stop Signal Task</title> <!-- defines a title in the browser tab -->
+  <script src="js/jspsych-6.0.5/jspsych.js"></script> <!-- jsPsych core library -->
+  <script src="js/jspsych-6.0.5/plugins/jspsych-instructions.js"></script> <!-- plugins define specific tasks, e.g., presenting instructions -->
+  <script src="js/jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+  <script src="js/jspsych-6.0.5/plugins/jspsych-survey-text-beta-6.1.js"></script> <!-- beta 6.1 version has the 'input required' function for text fields -->
+  <script src="js/jspsych-6.0.5/plugins/jspsych-survey-multi-choice.js"></script>
+  <script src="js/jspsych-6.0.5/plugins/jspsych-fullscreen.js"></script>
+  <script src="js/jquery-1.7.1.min.js"></script> <!-- the jquery library is used to communicate with the server (to store the data) through "AJAX" and PHP -->
+  <script src="js/bowser.js"></script> <!-- a browser and operating system detector -->
+  <script src="js/sprintf.js"></script> <!-- format variables in a string, used for customizable feedback strings in which the variables are not yet declared -->
+  <script src="js/custom-stop-signal-plugin.js"></script> <!-- custom plugin for the main stop-signal trial based on the image-keyboard-response plugin -->
+  <script src="js/jspsych-detect-held-down-keys.js"></script> <!-- custom plugin for detecting if a key is being held down -->
+  <script src="custom/experiment_variables.js"></script> <!-- parameters to customize the experiment -->
+  <script src="custom/text_variables.js"></script> <!-- holds all the text variables for easy modification/translation -->
+  <link href="js/jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link> <!-- standard jsPsych css stylesheet -->
+</head>
+<body></body>
+<script>
+  /* #########################################################################
+  Initialize variables
+  ######################################################################### */
+  // Initialize some important variables
+  var timeline = []; // this array stores the events we want to run in the experiment
+  var trial_ind = 1; // trial indexing variable starts at 1 for convenience
+  var block_ind = 0; // block indexing variables: block 0 is considered to be the practice block
+  var focus = 'focus'; // tracks if the current tab/window is the active tab/window, initially the current tab should be focused
+  var fullscr_ON = 'no'; // tracks fullscreen activity, initially not activated
+  var redirect_timeout = 1500; // set this so that data is saved before redirect!
+
+  // detect visitor variables with the bowser js library (/js/bowser.js)
+  jsPsych.data.addProperties({ // add these variables to all rows of the datafile
+    browser_name: bowser.name, browser_version: bowser.version,
+    os_name: bowser.osname, os_version: bowser.osversion,
+    tablet: bowser.tablet, mobile: bowser.mobile,
+    screen_resolution: screen.width + ' x ' + screen.height,
+    window_resolution: window.innerWidth + ' x ' + window.innerHeight, // this will be updated throughout the experiment
+  });
+
+  // define the images to be loaded, the actual preloading occurs in the jsPsych.init function at the bottom
+  var pre_load_stimuli = [fix_stim, go_stim1, go_stim2, stop_stim1, stop_stim2];
+
+  /* #########################################################################
+  Create the design based on the input from 'experiment_variables.js'
+  ######################################################################### */
+  // Since we have two stimuli, the number of trials of the basic design = 2 * nstim
+  // This design will later be repeated a few times for each block
+  // (number of repetitions is also defined in 'experiment_variables.js')
+  var ngostop = 1/nprop      // covert proportion to trial numbers. E.g. 1/5 = 1 stop signal and 4 go
+  var ntrials = ngostop * 2  // total number of trials in basic design (2 two choice stimuli x ngostop)
+  var signalArray = Array(ngostop-1).fill('go'); // no-signal trials
+  signalArray[ngostop-1] = ('stop'); // stop-signal trials
+
+  // create factorial design from choices(2) and signal(nstim)
+  var factors = {
+    stim: [choice_stim1, choice_stim2],
+    signal: signalArray,
+  };
+  var design = jsPsych.randomization.factorial(factors, 1);
+
+  // modify the design to make it compatible with the custom stop signal plugin
+  //  - set a first/second stimulus property.
+  //    on no-signal trials, only one image will be used (i.e. the go image/stimulus)
+  //    on stop-signal trials, two images will be used (i.e. the go and stop images/stimuli)
+  //  - set a data property with additional attributes for identifying the type of trial
+  for (var i = 0; i < design.length; i++) {
+      design[i].data = {}
+      if ((design[i].stim == choice_stim1) && (design[i].signal == 'go')) {
+        design[i].fixation = fix_stim;
+        design[i].first_stimulus = go_stim1;
+        design[i].second_stimulus = go_stim1;
+        design[i].data.stim = choice_stim1;
+        design[i].data.correct_response = cresp_stim1;
+        design[i].data.signal = "no";
+      } else if ((design[i].stim == choice_stim2) && (design[i].signal == 'go')) {
+        design[i].fixation = fix_stim;
+        design[i].first_stimulus = go_stim2;
+        design[i].second_stimulus = go_stim2;
+        design[i].data.stim = choice_stim2;
+        design[i].data.correct_response = cresp_stim2;
+        design[i].data.signal = "no";
+      } else if ((design[i].stim == choice_stim1) && (design[i].signal == 'stop')) {
+        design[i].fixation = fix_stim;
+        design[i].first_stimulus = go_stim1;
+        design[i].second_stimulus = stop_stim1;
+        design[i].data.stim = choice_stim1;
+        design[i].data.correct_response = null;
+        design[i].data.signal = "yes";
+      } else if ((design[i].stim == choice_stim2) && (design[i].signal == 'stop')) {
+        design[i].fixation = fix_stim;
+        design[i].first_stimulus = go_stim2;
+        design[i].second_stimulus = stop_stim2;
+        design[i].data.stim = choice_stim2;
+        design[i].data.correct_response = null;
+        design[i].data.signal = "yes";
+      }
+      delete design[i].signal; delete design[i].stim;
+  };
+
+  //console.log(design); // uncomment to print the design in the browser's console
+
+  /* #########################################################################
+  Define the individual events/trials that make up the experiment
+  ######################################################################### */
+
+  // welcome message trial. Also: end the experiment if browser is not Chrome or Firefox
+  var welcome = {
+    type: "instructions",
+    pages: welcome_message,
+    show_clickable_nav: true,
+    button_label_next: label_next_button,
+    on_start: function(trial){
+      if (bowser.name == 'Firefox' || bowser.name == 'Chrome'){
+        trial.pages = welcome_message;
+      } else {
+        trial.pages = not_supported_message;
+        jsPsych.endExperiment();
+      }
+    }
+  };
+
+  // these events turn fullscreen mode on in the beginning and off at the end, if enabled (see experiment_variables.js)
+  var fullscr = {
+    type: 'fullscreen',
+    fullscreen_mode: true,
+  };
+
+  var fullscr_off = {
+    type: 'fullscreen',
+    fullscreen_mode: false,
+  };
+
+  // informed consent trial. The informed_consent_text variable comes from /custom/js/text_variables.js
+  var consent = {
+    type: "instructions",
+    pages: [informed_consent_text],
+    show_clickable_nav: true,
+    button_label_next: label_consent_button,
+    allow_backward: false
+  };
+
+  // if enabled below, get participant's id from participant and add it to the datafile.
+  // the prompt is declared in the custom/text_variables.js file
+  var participant_id = {
+    type: 'survey-text',
+    questions: [{
+      prompt: subjID_instructions,
+      required: true
+    }, ],
+    on_finish: function(data) {
+      var responses = JSON.parse(data.responses);
+      var code = responses.Q0;
+      jsPsych.data.addProperties({
+        participantID: code
+      });
+    }
+  };
+
+  // get participant's age and add it to the datafile
+  // the prompt is declared in the custom/text_variables.js file
+  var age = {
+    type: 'survey-text',
+    questions: [{
+      prompt: age_instructions,
+      required: true
+    }, ],
+    on_finish: function(data) {
+      var responses = JSON.parse(data.responses);
+      var code = responses.Q0;
+      jsPsych.data.addProperties({
+        age: code
+      });
+    }
+  };
+
+  // get participant's gender and add it to the datafile
+  // the prompt and options are declared in the custom/text_variables.js file
+  var gender = {
+    type: 'survey-multi-choice',
+    questions: [{
+      prompt: gender_instructions,
+      options: gender_options,
+      required: true
+    }, ],
+    on_finish: function(data) {
+      var responses = JSON.parse(data.responses);
+      var code = responses.Q0;
+      jsPsych.data.addProperties({
+        gender: code
+      });
+    }
+  };
+
+  // instruction trial
+  // the instructions are declared in the custom/text_variables.js file
+  var instructions = {
+    type: "instructions",
+    pages: [page1, page2],
+    show_clickable_nav: true
+  };
+
+  // start of each block
+  // the start message is declared in the custom/text_variables.js file
+  var block_start = {
+    type: 'html-keyboard-response',
+    stimulus: text_at_start_block,
+    choices: ['space']
+  };
+
+  // get ready for beginning of block
+  // the get ready message is declared in the custom/text_variables.js file
+  var block_get_ready = {
+    type: 'html-keyboard-response',
+    stimulus: get_ready_message,
+    choices: jsPsych.NO_KEYS,
+    trial_duration: 2000,
+  };
+
+  // blank inter-trial interval
+  var blank_ITI = {
+    type: 'jspsych-detect-held-down-keys', // this enables the detection of held down keys
+    stimulus: "", // blank
+    trial_duration: ITI/2,
+    response_ends_trial: false,
+  };// now put the trial in a node that loops (if response is registered)
+  var held_down_node = {
+      timeline: [blank_ITI],
+      loop_function: function(data){
+          if(data.values()[0].key_press != null){
+              return true; // keep looping when a response is registered
+          } else {
+              return false; // break out of loop when no response is registered
+          }
+      }
+  };
+
+  // the main stimulus
+  // use custom-stop-signal-plugin.js to show three consecutive stimuli within one trial
+  // (fixation -> first stimulus -> second stimulus, with variable inter-stimuli-intervals)
+  var stimulus = {
+    type: 'custom-stop-signal-plugin',
+    fixation: jsPsych.timelineVariable('fixation'),
+    fixation_duration: FIX,
+    stimulus1: jsPsych.timelineVariable('first_stimulus'),
+    stimulus2: jsPsych.timelineVariable('second_stimulus'),
+    trial_duration: MAXRT, // this is the max duration of the actual stimulus (excluding fixation time)
+    // inter stimulus interval between first and second stimulus = stop signal delay (SSD)
+    ISI: function() {
+      var duration = SSD;
+      return duration
+    },
+    response_ends_trial: true,
+    choices: [cresp_stim1, cresp_stim2],
+    data: jsPsych.timelineVariable('data'),
+    // was the response correct? adapt SSD accordingly
+    on_finish: function(data) {
+      // check if the response was correct
+      data.response = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press); // keys are stored in keycodes not in character, so convert for convenience
+      data.correct = data.response == data.correct_response;
+      // if no response was made, the reaction time should not be -250 but null
+      if (data.rt == -250) {
+        data.rt = null
+      };
+      // on go trials, reaction times on the fixation (below zero) are always wrong
+      if (data.signal == 'no' && data.rt < 0){
+        data.correct = false;
+      };
+      // set and adapt stop signal delay (SSD)
+      data.SSD = SSD;
+      data.trial_i = trial_ind;
+      data.block_i = block_ind;
+      trial_ind = trial_ind + 1;
+      if (data.signal == 'yes') {
+        if (data.correct) {
+          SSD = SSD + SSDstep;
+          if (SSD >= MAXRT) {
+            SSD = MAXRT - SSDstep
+          };
+        } else {
+          SSD = SSD - SSDstep;
+          if (SSD <= SSDstep) {
+            SSD = SSDstep
+          };
+        }
+      }
+    }
+  };
+
+  // trial-by-trial feedback
+  // messages are defined in the custom/text_variables.js file
+  var trial_feedback = {
+    type: 'html-keyboard-response',
+    choices: jsPsych.NO_KEYS,
+    trial_duration: iFBT,
+    on_finish: function() {
+      if (block_ind == 0) { // this limits the amount of trials in the practice block
+        if (trial_ind > NdesignReps_practice * ntrials) {
+            jsPsych.endCurrentTimeline();
+        }
+      }
+    },
+    stimulus: function() {
+      var last_trial_data = jsPsych.data.get().last(1).values()[0];
+      if (last_trial_data['signal'] === 'no') { // go trials
+        if (last_trial_data['correct']) {
+          return correct_msg
+        } else {
+          if (last_trial_data['response'] === undefined) { // no response previous trial
+            return too_slow_msg
+          } else {
+            if (last_trial_data['rt'] >= 0) {
+              return incorrect_msg
+            } else {
+              return too_fast_msg
+            }
+          }
+        }
+      } else { // stop trials
+        if (last_trial_data['correct']) {
+          return correct_stop_msg
+        } else {
+          if (last_trial_data['rt'] >= 0) {
+            return incorrect_stop_msg
+          } else {
+            return too_fast_msg
+          }
+        }
+      }
+    }
+  };
+
+  // at the end of the block, give feedback on performance
+  var block_feedback = {
+    type: 'html-keyboard-response',
+    trial_duration: bFBT,
+    choices: function() {
+      if (block_ind == NexpBL){
+        return ['p','space']
+      } else {
+        return ['p'] // 'p' can be used to skip the feedback, useful for debugging
+      }
+    },
+    stimulus: function() {
+      // calculate performance measures
+      var ns_trials = jsPsych.data.get().filter({
+        trial_type: 'custom-stop-signal-plugin',
+        block_i: block_ind,
+        signal: 'no'
+      });
+      var avg_nsRT = Math.round(ns_trials.select('rt').subset(function(x){ return x > 0; }).mean());
+      var prop_ns_Correct = Math.round(ns_trials.filter({
+        correct: true
+      }).count() / ns_trials.count() * 1000) / 1000; // unhandy multiplying and dividing by 1000 necessary to round to two decimals
+      var prop_ns_Missed = Math.round(ns_trials.filter({
+        key_press: null
+      }).count() / ns_trials.count() * 1000) / 1000;
+      var prop_ns_Incorrect = Math.round((1 - (prop_ns_Correct + prop_ns_Missed)) * 1000) / 1000;
+      var ss_trials = jsPsych.data.get().filter({
+        trial_type: 'custom-stop-signal-plugin',
+        block_i: block_ind,
+        signal: 'yes'
+      });
+      var prop_ss_Correct = Math.round(ss_trials.filter({
+        correct: true
+      }).count() / ss_trials.count() * 1000) / 1000;
+      // in the last block, we should not say that there will be a next block
+      if (block_ind == NexpBL){
+        var next_block_text = final_block_msg
+      } else { // make a countdown timer
+        var count=(bFBT/1000);
+        var counter;
+        clearInterval(counter);
+        counter=setInterval(timer, 1000); //1000 will run it every 1 second
+        function timer(){
+          count=count-1;
+          if (count <= 0){
+              clearInterval(counter);
+          }
+          document.getElementById("timer").innerHTML = count + " seconds.";
+        }
+        var next_block_text = next_block_msg // insert countdown timer
+      }
+      // the final text to present. Can also show correct and incorrect proportions if requested.
+      return [
+        no_signal_header +
+        sprintf(avg_rt_msg,avg_nsRT) +
+        sprintf(prop_miss_msg,prop_ns_Missed) +
+        stop_signal_header +
+        sprintf(prop_corr_msg,prop_ss_Correct) +
+        next_block_text
+      ]
+    },
+    on_finish: function() {
+      trial_ind = 1; // reset trial counter
+      block_ind = block_ind + 1; // next block
+    }
+  };
+
+  // end trial and save the data
+  var goodbye = {
+    type: "html-keyboard-response",
+    stimulus: end_message,
+    on_start: function(data) {
+      var subjID = jsPsych.data.get().last(1).values()[0]['participantID'];
+      var full_data = jsPsych.data.get();
+      var ignore_columns = ['raw_rt','trial_type','first_stimulus','second_stimulus','onset_of_first_stimulus',
+        'onset_of_second_stimulus','key_press','correct_response','trial_index','internal_node_id'];
+      var rows = {trial_type: 'custom-stop-signal-plugin'}; // we are only interested in our main stimulus, not fixation, feedback etc.
+      var selected_data = jsPsych.data.get().filter(rows).ignore(ignore_columns);
+      // the next piece of codes orders the columns of the data file
+      var d = selected_data.values() // get the data values
+      // make an array that specifies the order of the object properties
+      var arr = ['participantID','age','gender','block_i','trial_i','stim','signal','SSD','response','rt','correct','focus','Fullscreen',
+      'time_elapsed','browser_name','browser_version','os_name','os_version','tablet','mobile','screen_resolution','window_resolution'];
+      new_arr = [] // we will fill this array with the ordered data
+      function myFunction(item) { // this is function is called in the arr.forEach call below
+        new_obj[item] = obj[item]
+        return new_obj
+      }
+      // do it for the whole data array
+      for (i = 0; i < d.length; i++) {
+        obj = d[i]; // get one row of data
+        new_obj = {};
+        arr.forEach(myFunction) // for each element in the array run my function
+        selected_data.values()[i] = new_obj; // insert the ordered values back in the jsPsych.data object
+      }
+      if (!online) {
+        selected_data.localSave('csv', 'SST_data_' + subjID + '.csv');
+      }
+    }
+  };
+
+  /* #########################################################################
+  combine trials in procedures (create nested timeline)
+  ######################################################################### */
+
+  // only ask for participant id if 'id' = 'particpant' (experiment_variables.js)
+  // if 'id' = 'url', get it from url; otherwise, generate random value
+  // only go into fullscreen mode if 'fullscreen' is true
+  if (id == "participant"){
+    if (fullscreen){
+      var start_timeline = [welcome, consent, participant_id, age, gender, fullscr, instructions]
+    } else {
+      var start_timeline = [welcome, consent, participant_id, age, gender, instructions]
+    }
+  } else {
+      if (id == "url"){
+        var urlvar = jsPsych.data.urlVariables();
+        var code = urlvar.subject; jsPsych.data.addProperties({participantID: code});
+      } else {
+        var code = jsPsych.randomization.randomID(); jsPsych.data.addProperties({participantID: code});
+      }
+      if (fullscreen) {
+        var start_timeline = [welcome, consent, age, gender, fullscr, instructions]
+      } else {
+        var start_timeline = [welcome, consent, age, gender, instructions]
+      }
+  }
+
+  // start the experiment with the previously defined start_timeline trials
+  var start_procedure = {
+    timeline: start_timeline,
+  };
+
+  // put trial_feedback in its own timeline to make it conditional (only to be shown during the practice block)
+  var feedback_node = {
+    timeline: [trial_feedback],
+    conditional_function: function() {
+      var last_trial_data = jsPsych.data.get().last(1).values()[0];
+      var current_block = block_ind;
+      if (current_block == 0 && last_trial_data['correct']==false) {
+        return true;
+      } else {
+        return false;
+      }
+    }
+  };
+
+  // timeline_variables determine the stimuli in the 'stimulus' trial
+  var trial_procedure = {
+    timeline: [blank_ITI, held_down_node, stimulus, feedback_node],
+    timeline_variables: design,
+    randomize_order: true,
+    repetitions: NdesignReps_exp,
+  };
+
+  // again: combine the following screen in one timeline, which constitues of the procedure of one block
+  var block_procedure = {
+    timeline: [block_start, block_get_ready, trial_procedure, block_feedback],
+    randomize_order: false,
+    repetitions: NexpBL+1, // add one because the first block is the practice block
+  };
+
+  // end of the experiment
+  if (fullscreen){
+    end_timeline = [fullscr_off, goodbye]
+  } else {
+    end_timeline = [goodbye]
+  }
+
+  var end_procedure = {
+    timeline: end_timeline, // here, you could add questionnaire trials etc...
+  };
+
+  // finally, push all the procedures to the overall timeline
+  timeline.push(start_procedure, block_procedure, end_procedure)
+
+  /* #########################################################################
+  the functions that save the data and initiates the experiment
+  ######################################################################### */
+
+  // function that appends data to an existing file (or creates the file if it does not exist)
+  function appendData(filename, filedata) {
+    $.ajax({ // make sure jquery-1.7.1.min.js is loaded in the html header for this to work
+      type: 'post',
+      cache: false,
+      url: 'php/save_data_append.php', // IMPORTANT: change the php script to link to the directory of your server where you want to store the data!
+      data: {
+        filename: filename,
+        filedata: filedata
+      },
+    });
+  };
+
+  // run the experiment!
+  jsPsych.init({
+    timeline: timeline,
+    preload_images: pre_load_stimuli,
+    on_data_update: function(data) { // each time the data is updated:
+      // write the current window resolution to the data
+      data.window_resolution =  window.innerWidth + ' x ' + window.innerHeight;
+      // is the experiment window the active window? (focus = yes, blur = no)
+      data.focus = focus; data.Fullscreen = fullscr_ON;
+      // append a subset of the data each time a go or stop stimulus is shown (the custom-stop-signal-plugin)
+      id_index = 2; // point in experiment when particpant id is manually entered. see 'start_timeline'
+      if (online){
+        var subjID = jsPsych.data.get().last(1).values()[0]['participantID'];
+        if (data.trial_index == id_index){ // write header
+          data_row = "participantID,age,gender,block_i,trial_i,stim,signal,SSD,response,rt,correct," +
+                        "focus,Fullscreen,time_elapsed,browser_name,browser_version,os_name,os_version," +
+                        "tablet,mobile,screen_resolution,window_resolution\n"
+          appendData('SST_data_'+ subjID +'.csv',data_row)
+        } else if (data.trial_type == 'custom-stop-signal-plugin'){ // append data each stimulus
+          data_row = data.participantID + ',' + data.age + ',' + data.gender + ',' + data.block_i + ',' + data.trial_i + ',' +
+                        data.stim + ',' + data.signal + ',' + data.SSD + ',' + data.response + ',' + data.rt + ',' + data.correct + ',' +
+                        data.focus + ',' + data.Fullscreen + ',' + data.time_elapsed + ',' + data.browser_name + ',' +
+                        data.browser_version + ',' + data.os_name + ',' + data.os_version + ',' + data.tablet + ',' + data.mobile + ',' +
+                        data.screen_resolution + ',' + data.window_resolution + '\n'
+          appendData('SST_data_'+ subjID +'.csv',data_row)
+        }
+      }
+    },
+    on_interaction_data_update: function(data) { //interaction data logs if participants leaves the browser window or exits full screen mode
+      interaction = data.event;
+      if (interaction.includes("fullscreen")){ // some unhandy coding to circumvent a bug in jspsych that logs fullscreenexit when actually entering
+        if (fullscr_ON == 'no') {fullscr_ON = 'yes'; return fullscr_ON}
+        else if (fullscr_ON == 'yes') {fullscr_ON = 'no'; return fullscr_ON}
+      }  else if (interaction == 'blur' || interaction == 'focus'){
+        focus = interaction;
+        return focus;
+      }
+    },
+    exclusions: { // browser window needs to have these dimensions, if not, participants get the chance to maximize their window, if they don't support this resolution when maximized they can't particiate.
+      min_width: minWidth,
+      min_height: minHeight
+    },
+    on_finish: function() {
+      if (redirect_onCompletion){
+        setTimeout("location.href = '" + redirect_link + "';",redirect_timeout); // redirect to another URL with a certain delay, only when redirect_onCompletion is set to 'true'
+      }
+    },
+  })
+</script>
+
+</html>
