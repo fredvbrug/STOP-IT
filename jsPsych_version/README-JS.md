@@ -20,7 +20,7 @@ The main advantages of this version of STOP-IT are (a) the version is platform-i
 
 ## The default stop-signal task
 
-The primary go task is a simple two-choice task in which participants have to discriminate between an arrow pointing to the left and an arrow point to the right. On go trials (75% of the trials), participants have to respond as fast and accurate as possible to these arrows. On stop-signal trials (25% of the trials), the arrows are replaced by 'XX' (i.e. a visual stop signal) after a variable delay, instructing participants to cancel their response.
+The primary go task is a simple two-choice task in which participants have to discriminate between an arrow pointing to the left and an arrow pointing to the right. On go trials (75% of the trials), participants have to respond as fast and accurate as possible to these arrows. On stop-signal trials (25% of the trials), the arrows are replaced by 'XX' (i.e. a visual stop signal) after a variable delay, instructing participants to cancel their response.
 
 ### Stimuli and responses
 The default go stimuli are two green arrows (RGB: 0,158,118). The fixation sign (a black dot; RGB: 0,0,0) and arrows are presented in the center of the screen on a white background. Stimulus size will correspond to the size of the go stimuli in the './images' folder. Occasionally, a visual stop signal ('XX' in black; RGB: 0,0,0) is presented shortly after the stimulus onset in the go task, replacing the go stimulus. Again, the size of the default stop signal will depend on the size of the stop signal in the images folder. Researchers can change all stimuli by uploading new images in the './images' folder. Be aware that the file names should correspond to the names described in the 'experiment_variables.js' file (see below).
@@ -32,7 +32,7 @@ The program starts with a welcome message, and the informed consent (which can b
 
 The experiment consists of two phases: a practice phase (one block of 32 trials) and an experimental phase (4 blocks of 64 trials). As we will outline below, some of these default numbers can be changed.
 
-In both phases, each trial starts with the presentation of the fixation sign, which is replaced by the go stimulus after 250 ms. The stimulus remains on the screen until participants respond (using the predefined responses keys), or until 1,250 ms (i.e., the maximal RT) have elapsed. The default inter-stimulus interval is 750 ms and independent of RT. On stop trials, a stop signal is presented after a variable SSD. SSD is initially set at 300 ms and is adjusted continuously with the staircase tracking procedure: when inhibition is successful, SSD increases by 50 ms; when inhibition is unsuccessful, SSD decreases by 50 ms. Response registration continues during stop-signal presentation.
+In both phases, each trial starts with the presentation of the fixation sign, which is replaced by the go stimulus after 250 ms. The stimulus remains on the screen until participants respond (using the predefined responses keys), or until 1,250 ms (i.e., the maximal RT) have elapsed. The default inter-stimulus interval is 750 ms and independent of RT. On stop trials, a stop signal is presented after a variable SSD. SSD is initially set to 300 ms and is adjusted continuously with the staircase tracking procedure: when inhibition is successful, SSD increases by 50 ms; when inhibition is unsuccessful, SSD decreases by 50 ms. Response registration continues during stop-signal presentation.
 
 During the practice phase, immediate feedback is presented for 750 ms:
 
@@ -46,7 +46,7 @@ Between each block, subjects have to wait for 15 seconds before they can start t
 
 ### Output files
 The results are written to a data file that is stored in the data folder.
-The data file is a csv file (‘SST_data_ID.csv’, where ID corresponds to the participant number), which can be opened in Microsoft Excel or statistical-software packages such as R and SPPS. STOP-IT will never overwrite data files; when a data file already exists (i.e., the participant number was already used), the new data will be appended to the existing file. When data files need to be replaced (e.g., because a participant did not complete the experiment), the user can manually delete the data file with the basic file system utilities.
+The data file is a csv file (‘SST_data_ID.csv’, where ID corresponds to the participant number), which can be opened in Microsoft Excel or statistical-software packages such as R and SPSS. STOP-IT will never overwrite data files; when a data file already exists (i.e., the participant number was already used), the new data will be appended to the existing file. When data files need to be replaced (e.g., because a participant did not complete the experiment), the user can manually delete the data file with the basic file system utilities.
 
 The data file consists of the following information:
 - participantID: participant number
@@ -57,12 +57,12 @@ The data file consists of the following information:
 - stim: which go stimulus was presented?
 - signal: was a stop signal presented or not (yes = stop trial; no = go trial)
 - SSD: stop-signal delay (in ms)
-- response: which go response was executed on the trial (Left or right response. Undefined = no response).
+- response: which go response was executed on the trial (left or right response. Undefined = no response).
 - RT: latency of the go response in ms (null: no response was registered). Negative values indicate that the participant pressed a key during the fixation interval (i.e. before the presentation of the go stimulus).
 - Correct: was the trial correct (TRUE) or not (FALSE). A correct go trial requires a correct response; a correct stop trial requires no response.
 - Focus: did the participant interact with the experiment, as determined by jsPsych (see https://www.jspsych.org/core_library/jspsych-data/#jspsychdatagetinteractiondata for further information).
 - Fullscreen: was the experiment run in fullscreen mode or not?
-- time_elapsed: total time elapsed since the begin of the experiment (can be useful for debugging purposes)
+- time_elapsed: total time elapsed since the start of the experiment (can be useful for debugging purposes)
 - browser_name: name of the browser used to run the experiment
 - browser_version: version number of the browser used to run the experiment
 - os_name: name of the operating system used to run the experiment
@@ -153,7 +153,7 @@ The value is determined via *var id*:
 Researchers can redirect participants to another URL when the experiment ends (useful for redirecting to e.g. Prolific or MTurk)
 
 - *var redirect_onCompletion = false*: redirect (VALUE = true) or not (VALUE = false)
-- *var redirect_link = 'https://osf.io'*: redirect link. **Importantly, use always use https for links (including links to your own experiment).**
+- *var redirect_link = 'https://osf.io'*: redirect link. **Importantly, always use https for links (including links to your own experiment).**
 
 
 ### Text variables
