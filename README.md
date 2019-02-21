@@ -7,9 +7,9 @@ Here we provide open-source software that can be used to execute a stop-signal t
 ### Execute the stop-signal task
 We provide platform-independent software to correctly execute the stop-signal task. It is programmed using jsPsych (De Leeuw, 2015)
 
-The software is easily amendable, and can be used both for offline and online studies. It replaces a previous version (described in Verbruggen, Logan, & Stevens, 2008) which is no longer maintained (and which can online be used in Windows computers). 
+The software is easily amendable, and can be used for offline and online studies. It replaces a previous version (described in Verbruggen, Logan, & Stevens, 2008) which is no longer maintained (and which could only be used on Windows computers). 
 
-To run the stop-signal task, download the jsPsych folder. **We strongly recommend that you read the README-JS file before you start.** To run the stop-signal task, simply open 'experiment.html' in Firefox or Chrome browser, and follow the instructions.
+To install the stop-signal task, download the jsPsych folder. **We strongly recommend that you read the README-JS file before you start.** To run the stop-signal task, simply open 'experiment.html' in Firefox or Chrome browser, and follow the instructions.
 
 ### Analyse the data of the stop-signal task
 Once you have collected data using the jsPsych program, you can analyse them using an R Shiny app.
