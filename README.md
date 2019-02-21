@@ -7,20 +7,18 @@ Here we provide open-source software that can be used to execute a stop-signal t
 ### Execute the stop-signal task
 We provide platform-independent software to correctly execute the stop-signal task. It is programmed using jsPsych (De Leeuw, 2015)
 
-The software is easily amendable, and can be used for offline and online studies. It replaces a previous version (described in Verbruggen, Logan, & Stevens, 2008) which is no longer maintained (and which could only be used on Windows computers). 
+The software is easily amendable, and can be used for offline and online studies. It replaces a previous version (described in Verbruggen, Logan, & Stevens, 2008) which is no longer maintained (and which could only be used on Windows computers).
 
-To install the stop-signal task, download the jsPsych folder. **We strongly recommend that you read the README-JS file before you start.** To run the stop-signal task, simply open 'experiment.html' in Firefox or Chrome browser, and follow the instructions.
+To install the stop-signal task, download the jsPsych folder. **We strongly recommend that you read the README-STOP-IT-JS file before you start.** To run the stop-signal task, simply open 'experiment.html' in Firefox or Chrome browser, and follow the instructions.
 
 ### Analyse the data of the stop-signal task
-Once you have collected data using the jsPsych program, you can analyse them using an R Shiny app.
-To use this app:
+Data collected with the jsPsych version of STOP-IT can be analyzed with an *'R Shiny'* app. This app replaces the original ANALYZE-IT program (Verbruggen, Logan, & Stevens), which no longer complies with the most recent recommendations (so this 2008-version should no longer be used!). This new version of the analysis software only processes data produced by the jsPsych version of STOP-IT, although this may change in the future.
 
-- Step 1: Install R (https://www.r-project.org)
-- Step 2: Open the R console and type "install.packages('shiny’)”. You may have to restart R at this point.
-- Step 3: Type in the R console "shiny::runGitHub('STOP-IT', 'fredvbrug', launch.browser = TRUE, subdir = 'jsPsych_version')"
+**For detailed information about installation and usage of the analysis app, please read the README-ANALYZE-IT-JS file.**
 
-Note that Steps 1 and 2 can be skipped if you have already installed R and the shiny package. At the moment, the Shiny app only processes data collected with our jsPsych program.  
+### Contact information
 
+For questions or feedback, contact frederick.verbruggen@ugent.be
 
 ### References
 de Leeuw, J. R. (2015). jsPsych: A JavaScript library for creating behavioral experiments in a Web browser. Behavior Research Methods, 47(1), 1–12. https://doi.org/10.3758/s13428-014-0458-y
