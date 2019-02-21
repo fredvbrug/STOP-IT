@@ -34,12 +34,12 @@ In both table panels, there are 11 dependent variables:
 - usRT = RT on unsuccessful stop trials (in ms)
 - goRT_all = reaction time (RT) on go trials with a response (in ms). This includes choice errors.
 - goRT_correct = reaction time (RT) on go trials with a correct response (in ms). Choice errors are excluded.
-- goRT_sd = intra-subject variability in response latencies
+- goRT_sd = intra-subject variability in response latencies (including all go trials with a response)
 - go_omission = proportion of go trials without a response
 - go_error = proportion of incorrect responses on go trials (e.g. the go stimulus required a left response but a right response was executed)
 - Nstop = number of stop trials included in the analyses
 - NGo = number of go trials included in the analyses.
 
-Note: to test the assumption of the independent race model (see Verbruggen et al., 2019), users should compare usRT with goRT_all (i.e. usRT < goRT_all).
+Note: to test the assumption of the independent race model (see Verbruggen et al., 2019), users should compare usRT with goRT_all (i.e. usRT < goRT_all). As explained in the consensus guide, the assumptions of the race model should be checked for each participant (and condition if there is more than one).
 
 The data shown in the tables can be downloaded via the corresponding buttons. Finally, there is a third download button, which appears in the 'Optional' panel. Users can use this button to transform the STOP-IT jsPsych output to a format that is appropriate for parametric testing. See http://dora.erbe-matzke.com/software.html for further information.
