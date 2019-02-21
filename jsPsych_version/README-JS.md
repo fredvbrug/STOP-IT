@@ -97,16 +97,9 @@ var NAME = VALUE. Researchers can change the VALUE but they should not change 'v
 - *var choice_stim1 = 'left'*: adjust VALUE to change the label (in the data file) of the go stimulus associated with the left response
 - *var choice_stim2 = 'right'*: adjust VALUE to change the label (in the data file) of the go stimulus associated with the right response
 
-the same:
+The images themselves can be adjusted by replacing the .png files in the image folder. The names of the images and the values defined in this 'experiment_variables.js' file (see below) should correspond.
 
-- 'fix.png' for the fixation stimulus
-- 'go_left.png' and 'go_right.png' for the go stimuli that require a left and right response, respectively
-- 'stop_left.png' and 'stop_right.png' for the stop signals that will replace the left and right go stimulus respectively. Note that in the default version, the same image is used for both stop signals, but researchers can also use different images if wanted (e.g. 'stop_left.png' could be a red left-pointing arrow, and 'stop_right.png' could be a red right-pointing arrow).
-
-
-
-Note that the images themselves can be adjusted by replacing the .png files in the image folder. The names of the images and the values defined in this 'experiment_variables.js' file should correspond.
-
+There are separate image files for the stop signal that will replace the left go stimulus, and the stop signal that will replace the right go stimulus. In the default version, the content of the image files is the same (i.e. two crosses, 'XX'), but researchers can also use different images if wanted (e.g. 'stop_left.png' could be a red left-pointing arrow, and 'stop_right.png' could be a red right-pointing arrow).
 
 ##### Design variables
 In the first step, researchers can adjust the proportion of stop signals:
