@@ -23,8 +23,8 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   <script src="js/sprintf.js"></script> <!-- format variables in a string, used for customizable feedback strings in which the variables are not yet declared -->
   <script src="js/custom-stop-signal-plugin.js"></script> <!-- custom plugin for the main stop-signal trial based on the image-keyboard-response plugin -->
   <script src="js/jspsych-detect-held-down-keys.js"></script> <!-- custom plugin for detecting if a key is being held down -->
-  <script src="custom/experiment_variables.js"></script> <!-- parameters to customize the experiment -->
-  <script src="custom/text_variables.js"></script> <!-- holds all the text variables for easy modification/translation -->
+  <script src="configuration/experiment_variables.js"></script> <!-- parameters to configure the experiment -->
+  <script src="configuration/text_variables.js"></script> <!-- holds all the text variables for easy modification/translation -->
   <link href="js/jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css"></link> <!-- standard jsPsych css stylesheet -->
 </head>
 <body></body>
@@ -142,7 +142,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
     fullscreen_mode: false,
   };
 
-  // informed consent trial. The informed_consent_text variable comes from /custom/js/text_variables.js
+  // informed consent trial. The informed_consent_text variable comes from /configuration/text_variables.js
   var consent = {
     type: "instructions",
     pages: [informed_consent_text],
@@ -152,7 +152,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   };
 
   // if enabled below, get participant's id from participant and add it to the datafile.
-  // the prompt is declared in the custom/text_variables.js file
+  // the prompt is declared in the configuration/text_variables.js file
   var participant_id = {
     type: 'survey-text',
     questions: [{
@@ -169,7 +169,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   };
 
   // get participant's age and add it to the datafile
-  // the prompt is declared in the custom/text_variables.js file
+  // the prompt is declared in the configuration/text_variables.js file
   var age = {
     type: 'survey-text',
     questions: [{
@@ -186,7 +186,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   };
 
   // get participant's gender and add it to the datafile
-  // the prompt and options are declared in the custom/text_variables.js file
+  // the prompt and options are declared in the configuration/text_variables.js file
   var gender = {
     type: 'survey-multi-choice',
     questions: [{
@@ -204,7 +204,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   };
 
   // instruction trial
-  // the instructions are declared in the custom/text_variables.js file
+  // the instructions are declared in the configuration/text_variables.js file
   var instructions = {
     type: "instructions",
     pages: [page1, page2],
@@ -212,7 +212,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   };
 
   // start of each block
-  // the start message is declared in the custom/text_variables.js file
+  // the start message is declared in the configuration/text_variables.js file
   var block_start = {
     type: 'html-keyboard-response',
     stimulus: text_at_start_block,
@@ -220,7 +220,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   };
 
   // get ready for beginning of block
-  // the get ready message is declared in the custom/text_variables.js file
+  // the get ready message is declared in the configuration/text_variables.js file
   var block_get_ready = {
     type: 'html-keyboard-response',
     stimulus: get_ready_message,
@@ -299,7 +299,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   };
 
   // trial-by-trial feedback
-  // messages are defined in the custom/text_variables.js file
+  // messages are defined in the configuration/text_variables.js file
   var trial_feedback = {
     type: 'html-keyboard-response',
     choices: jsPsych.NO_KEYS,

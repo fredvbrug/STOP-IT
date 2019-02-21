@@ -62,7 +62,7 @@ var bFBT = 15000; // break interval between blocks
 
 // ----- CUSTOMISE INPUT/OUTPUT VARIABLES -----
 // participant ID:
-// - ID via participant (e.g. when the particpant gets a number via experimenter)
+// - ID via participant (e.g. when the participant gets a number via experimenter)
 // - ID via the URL of the experiment: 'XXXX.html?subject=15'(subject is the current keyword)
 // - determine ID at random with jsPsych.randomization.randomID().
 
