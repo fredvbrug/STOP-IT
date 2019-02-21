@@ -9,12 +9,12 @@ We provide platform-independent software to correctly execute the stop-signal ta
 
 The software is easily amendable, and can be used for offline and online studies. It replaces a previous version (described in Verbruggen, Logan, & Stevens, 2008) which is no longer maintained (and which could only be used on Windows computers).
 
-To install the stop-signal task, download the jsPsych folder. **We strongly recommend that you read the README-STOP-IT-JS file before you start.** To run the stop-signal task, simply open 'experiment.html' in Firefox or Chrome browser, and follow the instructions.
+To install the stop-signal task, download the jsPsych folder. **We strongly recommend that you read the [README-STOP-IT-JS](https://github.com/fredvbrug/STOP-IT/blob/master/jsPsych_version/README-STOP-IT-JS.md) file before you start.** To run the stop-signal task, simply open 'experiment.html' in Firefox or Chrome browser, and follow the instructions.
 
 ### Analyse the data of the stop-signal task
 Data collected with the jsPsych version of STOP-IT can be analyzed with an *'R Shiny'* app. This app replaces the original ANALYZE-IT program (Verbruggen, Logan, & Stevens), which no longer complies with the most recent recommendations (so this 2008-version should no longer be used!). This new version of the analysis software only processes data produced by the jsPsych version of STOP-IT, although this may change in the future.
 
-**For detailed information about installation and usage of the analysis app, please read the README-ANALYZE-IT-JS file.**
+**For detailed information about installation and usage of the analysis app, please read the [README-ANALYZE-IT-JS](https://github.com/fredvbrug/STOP-IT/blob/master/jsPsych_version/README-ANALYZE-IT-JS.md) file.**
 
 ### Contact information
 
