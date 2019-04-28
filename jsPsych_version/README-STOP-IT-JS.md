@@ -73,7 +73,7 @@ The data file consists of the following information:
 - screen_resolution: resolution of the screen
 - window_resolution: resolution of the window (if fullscreen: screen and window resolution will correspond)
 
-When the experiment is hosted on a web server (i.e. online experiments), the data will be automatically written to the data file (stored in the data folder) after every trial. Thus, **data will be available when online experiments are aborted before the end**. For experiments that are hosted on a local computer (i.e. offline experiments), data will be written to the data file at the end of the experiment; a Download window will open (in the browser) and researchers can select the data folder. Thus, **no data are saved if local experiments are aborted before the end**.
+When the experiment is hosted on a web server (i.e. online experiments), the data will be automatically written to the data file (stored in the data folder) after every trial. Thus, **data will be available when online experiments are aborted before the end**. For experiments that are hosted on a local computer (i.e. offline experiments), data will be written to the data file at the end of the experiment. Thus, **no data are saved if local experiments are aborted before the end**. When the data are stored, a Download window will open (in the browser) and researchers can select the data folder.
 
 ## The Configuration File
 The task can be used immediately after installation. However, users can adjust some of the default values of the task. This can be done by opening the 'experiment_variables.js' and 'text_variables.js' files (which can be found in the './configuration' folder) in a text editor (such as Notepad).
