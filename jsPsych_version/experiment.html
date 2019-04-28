@@ -17,6 +17,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   <script src="js/jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
   <script src="js/jspsych-6.0.5/plugins/jspsych-survey-text-beta-6.1.js"></script> <!-- beta 6.1 version has the 'input required' function for text fields -->
   <script src="js/jspsych-6.0.5/plugins/jspsych-survey-multi-choice.js"></script>
+  <script src="js/jspsych-6.0.5/plugins/jspsych-call-function.js"></script>
   <script src="js/jspsych-6.0.5/plugins/jspsych-fullscreen.js"></script>
   <script src="js/jquery-1.7.1.min.js"></script> <!-- the jquery library is used to communicate with the server (to store the data) through "AJAX" and PHP -->
   <script src="js/bowser.js"></script> <!-- a browser and operating system detector -->
@@ -40,11 +41,18 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   var fullscr_ON = 'no'; // tracks fullscreen activity, initially not activated
   var redirect_timeout = 1500; // set this so that data is saved before redirect!
 
+  // is the experiment running from a server or not? (this determines if data is saved on server or offline)
+  if (document.location.host) { // returns your host or null
+    online = true;
+  } else {
+    online = false;
+  };
+
   // detect visitor variables with the bowser js library (/js/bowser.js)
   jsPsych.data.addProperties({ // add these variables to all rows of the datafile
     browser_name: bowser.name, browser_version: bowser.version,
     os_name: bowser.osname, os_version: bowser.osversion,
-    tablet: bowser.tablet, mobile: bowser.mobile,
+    tablet: String(bowser.tablet), mobile: String(bowser.mobile), // convert explicitly to string so that "undefined" (no response) does not lead to empty cells in the datafile
     screen_resolution: screen.width + ' x ' + screen.height,
     window_resolution: window.innerWidth + ' x ' + window.innerHeight, // this will be updated throughout the experiment
   });
@@ -96,14 +104,14 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
         design[i].first_stimulus = go_stim1;
         design[i].second_stimulus = stop_stim1;
         design[i].data.stim = choice_stim1;
-        design[i].data.correct_response = null;
+        design[i].data.correct_response = "undefined";
         design[i].data.signal = "yes";
       } else if ((design[i].stim == choice_stim2) && (design[i].signal == 'stop')) {
         design[i].fixation = fix_stim;
         design[i].first_stimulus = go_stim2;
         design[i].second_stimulus = stop_stim2;
         design[i].data.stim = choice_stim2;
-        design[i].data.correct_response = null;
+        design[i].data.correct_response = "undefined";
         design[i].data.signal = "yes";
       }
       delete design[i].signal; delete design[i].stim;
@@ -126,7 +134,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
         trial.pages = welcome_message;
       } else {
         trial.pages = not_supported_message;
-        jsPsych.endExperiment();
+        setTimeout(function(){location.href="html/not_supported.html"}, 2000);
       }
     }
   };
@@ -268,6 +276,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
     on_finish: function(data) {
       // check if the response was correct
       data.response = jsPsych.pluginAPI.convertKeyCodeToKeyCharacter(data.key_press); // keys are stored in keycodes not in character, so convert for convenience
+      data.response = String(data.response); // convert explicitly to string so that "undefined" (no response) does not lead to empty cells in the datafile
       data.correct = data.response == data.correct_response;
       // if no response was made, the reaction time should not be -250 but null
       if (data.rt == -250) {
@@ -304,20 +313,13 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
     type: 'html-keyboard-response',
     choices: jsPsych.NO_KEYS,
     trial_duration: iFBT,
-    on_finish: function() {
-      if (block_ind == 0) { // this limits the amount of trials in the practice block
-        if (trial_ind > NdesignReps_practice * ntrials) {
-            jsPsych.endCurrentTimeline();
-        }
-      }
-    },
     stimulus: function() {
       var last_trial_data = jsPsych.data.get().last(1).values()[0];
       if (last_trial_data['signal'] === 'no') { // go trials
         if (last_trial_data['correct']) {
           return correct_msg
         } else {
-          if (last_trial_data['response'] === undefined) { // no response previous trial
+          if (last_trial_data['response'] === "undefined") { // no response previous trial
             return too_slow_msg
           } else {
             if (last_trial_data['rt'] >= 0) {
@@ -407,6 +409,17 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       block_ind = block_ind + 1; // next block
     }
   };
+
+  var evaluate_end_if_practice = {
+    type: 'call-function',
+    func: function() {
+      if (block_ind == 0) { // this limits the amount of trials in the practice block
+        if (trial_ind > NdesignReps_practice * ntrials) {
+          jsPsych.endCurrentTimeline();
+        }
+      }
+    }
+  };
 
   // end trial and save the data
   var goodbye = {
@@ -490,7 +503,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
   // timeline_variables determine the stimuli in the 'stimulus' trial
   var trial_procedure = {
-    timeline: [blank_ITI, held_down_node, stimulus, feedback_node],
+    timeline: [blank_ITI, held_down_node, stimulus, feedback_node, evaluate_end_if_practice],
     timeline_variables: design,
     randomize_order: true,
     repetitions: NdesignReps_exp,

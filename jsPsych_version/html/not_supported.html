@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- import the jsPsych core library, specific plugins, jquery and some other scripts-->
+  <title>Browser Not Supported</title> <!-- defines a title in the browser tab -->
+  <script src="../js/jspsych-6.0.5/jspsych.js"></script> <!-- jsPsych core library -->
+  <script src="../js/jspsych-6.0.5/plugins/jspsych-html-keyboard-response.js"></script>
+  <link href="../js/jspsych-6.0.5/css/jspsych.css" rel="stylesheet" type="text/css">
+  </link> <!-- standard jsPsych css stylesheet -->
+</head>
+
+<body></body>
+<script>
+  var timeline = [];
+
+  var not_supported_message = "Due to compatibility problems with certain webbrowsers, <br> " +
+    "you can only complete the experiment with the Google Chrome or Firefox webbrowser. <br> <br>" +
+    "If you are running this experiment from Prolific or Mechanical Turk, <br>" +
+    "please return the current submission (so that you will not be penalized)!"
+
+  var not_supported_event = {
+    type: 'html-keyboard-response',
+    stimulus: not_supported_message,
+    choices: jsPsych.NO_KEYS,
+  };
+  timeline.push(not_supported_event);
+
+  jsPsych.init({
+    timeline: timeline,
+  })
+</script>
+
+</html>

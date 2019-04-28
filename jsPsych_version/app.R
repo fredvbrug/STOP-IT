@@ -65,7 +65,7 @@ ui <- fluidPage(
 server <- function(input, output) {
   data<-eventReactive(input$process,({
     do.call("rbind", (lapply(input$csvs$datapath, function(i){
-      read.csv(i, header=TRUE, na.strings=c("null"), colClasses=c("rt"="integer"))})))
+      read.csv(i, header=TRUE, na.strings=c("null"), colClasses=c("correct"="factor"))})))
   }))
 
 
@@ -74,7 +74,6 @@ server <- function(input, output) {
     for (i in nsubjects){
       # select the relevant experimental data for the participant
       dataset<-reactive({subset(data(), data()$participantID == i & data()$block_i > 0)})
-
 
       # exclude trials when particpant is not focusing
       if (input$scr == 'yes'){
@@ -107,11 +106,11 @@ server <- function(input, output) {
       goRT.adj <- ifelse(go()$response == "undefined", goRT.max, go()$rt)
       nth <- as.vector(round(quantile(goRT.adj, probs = presp, type = 6)))
 
-      go.correct.trials <- reactive({subset(go(), go()$correct == "true")})
+      go.correct.trials <- reactive({subset(go(), go()$correct %in% c("true", "TRUE"))})
       goRT_correct <- round(mean(go.correct.trials()$rt))
 
       go_omission <- 1 - (nrow(go.resp.trials())/Ngo)
-      go_error <-  1 - (nrow(go.correct.trials())/Ngo)
+      go_error <-  1 - (nrow(go.correct.trials())/nrow(go.resp.trials()))
 
       # calculate SSRT
       ssrt <- nth - ssd

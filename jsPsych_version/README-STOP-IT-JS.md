@@ -12,6 +12,7 @@ In the jsPsych folder, researchers can find the 'experiment.html' file, the 'app
 
 - './configuration': this folder contains two files that researchers can adjust to change the design and certain parameters of the task (see below)
 - './data': the data of all participants will automatically appear in this folder when in 'online' mode (see below)
+- ./html': STOP-IT requires Firefox or Chrome (see above). When an unsupported browser is used, the 'not_supported.html' is opened. This might be relevant for online experiments using platforms such as Prolific or Mturk. The message in the html file can be adjusted.
 - './images': this folder contains the stimuli used in the stop task. These can be adjusted (see below)
 - './js': this folder contains the jsPsych library and other Javacript libraries that are required to run the program. These files should not be changed.
 - './php': this folder contains the PHP script that is required to write the data to an output file on a web server. This script should not be changed.
@@ -72,8 +73,7 @@ The data file consists of the following information:
 - screen_resolution: resolution of the screen
 - window_resolution: resolution of the window (if fullscreen: screen and window resolution will correspond)
 
-When the experiment is hosted on a web server (i.e. online experiments), the data will be written to the data file after every trial. Thus, data will be available when online experiments are aborted before the end. For experiments that are hosted on a local computer (i.e. offline experiments), data will be written to the data file at the end of the experiment. Thus, no data are saved if local experiments are aborted before the end.
-
+When the experiment is hosted on a web server (i.e. online experiments), the data will be automatically written to the data file (stored in the data folder) after every trial. Thus, **data will be available when online experiments are aborted before the end**. For experiments that are hosted on a local computer (i.e. offline experiments), data will be written to the data file at the end of the experiment; a Download window will open (in the browser) and researchers can select the data folder. Thus, **no data are saved if local experiments are aborted before the end**.
 
 ## The Configuration File
 The task can be used immediately after installation. However, users can adjust some of the default values of the task. This can be done by opening the 'experiment_variables.js' and 'text_variables.js' files (which can be found in the './configuration' folder) in a text editor (such as Notepad).
@@ -137,11 +137,6 @@ There are three different ways to determine the participant number for the file 
 
 The value is determined via *var id*:
 - *var id = 'random'*: use 'participant', 'url', or 'random'
-
-##### Online vs. offline
-
-- *var online = true*: save data online (true) in the data folder or not (false). 'Online' requires that the experiment is hosted on a server/webspace that supports PHP. If *var online = false*, a Download window will open (in the browser) at the end of the experiment and researchers can select the data folder. Note that data are saved after every trial in 'online' mode but not in 'offline' mode (see above).
-
 
 ##### Screen variables
 

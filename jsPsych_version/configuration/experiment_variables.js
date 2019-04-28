@@ -69,12 +69,6 @@ var bFBT = 15000; // break interval between blocks
 var id = 'random' // use one of these three options: 'participant', 'url', 'random'
 
 
-// Data variables: where to save the data (online or locally).
-// 'Online' requires that the experiment is hosted on a server/webspace.
-
-var online = true; //save data online (true) or not (false)
-
-
 // ----- CUSTOMISE SCREEN VARIABLES -----
 // Please note that Safari does not support keyboard input when in full mode!!!
 // Therefore, this browser will be excluded by default
