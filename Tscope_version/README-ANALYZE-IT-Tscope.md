@@ -1,6 +1,8 @@
-# ANALYZE-IT-Tscope: Analyze the data of STOP-IT Tscope (the original version of STOP-IT, as described in using app.R
+# ANALYZE-IT-Tscope: Analyse the data of the original Tscope version of STOP-IT
 
 *app.R*  in the Tscope folder can be used to analyze the data produced by the Tscope version of STOP-IT (Verbruggen, Logan, & Stevens, 2008), and is available under a GNU license. The software uses Shiny, *"an open source R package that provides an elegant and powerful web framework for building web applications using R."* For general information about Shiny, see https://www.rstudio.com/products/shiny/
+
+**This app replaces the original ANALYZE-IT program (Verbruggen, Logan, & Stevens, 2008), which no longer complies with the most recent recommendations (as described in the stop-signal task consensus guide, Verbruggen et al., 2019, eLife). The 2008-version of ANALYZE-IT should no longer be used!!!**
 
 ## Installation of the app
 
