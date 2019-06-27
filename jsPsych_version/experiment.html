@@ -128,6 +128,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
     type: "instructions",
     pages: welcome_message,
     show_clickable_nav: true,
+    allow_backward: false,
     button_label_next: label_next_button,
     on_start: function(trial){
       if (bowser.name == 'Firefox' || bowser.name == 'Chrome'){
@@ -143,11 +144,14 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   var fullscr = {
     type: 'fullscreen',
     fullscreen_mode: true,
+    message: full_screen_message,
+    button_label: label_next_button,
   };
 
   var fullscr_off = {
     type: 'fullscreen',
     fullscreen_mode: false,
+    button_label: label_next_button,
   };
 
   // informed consent trial. The informed_consent_text variable comes from /configuration/text_variables.js
@@ -167,6 +171,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       prompt: subjID_instructions,
       required: true
     }, ],
+    button_label: label_next_button,
     on_finish: function(data) {
       var responses = JSON.parse(data.responses);
       var code = responses.Q0;
@@ -184,6 +189,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       prompt: age_instructions,
       required: true
     }, ],
+    button_label: label_next_button,
     on_finish: function(data) {
       var responses = JSON.parse(data.responses);
       var code = responses.Q0;
@@ -202,6 +208,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       options: gender_options,
       required: true
     }, ],
+    button_label: label_next_button,
     on_finish: function(data) {
       var responses = JSON.parse(data.responses);
       var code = responses.Q0;
@@ -216,7 +223,9 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
   var instructions = {
     type: "instructions",
     pages: [page1, page2],
-    show_clickable_nav: true
+    show_clickable_nav: true,
+    button_label_previous: label_previous_button,
+    button_label_next: label_next_button,
   };
 
   // start of each block
@@ -390,7 +399,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
           if (count <= 0){
               clearInterval(counter);
           }
-          document.getElementById("timer").innerHTML = count + " seconds.";
+          document.getElementById("timer").innerHTML = count ;
         }
         var next_block_text = next_block_msg // insert countdown timer
       }

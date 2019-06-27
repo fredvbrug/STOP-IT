@@ -37,12 +37,14 @@ avg_rt_msg = "<p>Average response time = %d milliseconds</p>"
 prop_miss_msg = "<p>Proportion missed go = %.2f (should be 0)</p>"
 stop_signal_header = "<p><b>STOP-SIGNAL TRIALS: </b></p>"
 prop_corr_msg = "<p>Proportion correct stops = %.2f (should be close to 0.5)</p>" + "<br>"
-next_block_msg = "<p>You can take a short break, the next block starts in <span id='timer'>15 seconds.</span></p>"
+next_block_msg = "<p>You can take a short break, the next block starts in <span id='timer'>15</span></p>"
 final_block_msg = "<p>Press space to continue...</p>" // after the final block they don't need a break
 
 // other
+var label_previous_button = 'Previous';
 var label_next_button = 'Next';
 var label_consent_button = 'I agree';
+var full_screen_message = '<p>The experiment will switch to fullscreen mode when you push the button below. </p>';
 var welcome_message = ['<p>Welcome to the experiment.</p>' + '<p>Press "Next" to begin.</p>'];
 var not_supported_message = ['<p>This experiment requires the Chrome or Firefox webbrowser.</p>'];
 var subjID_instructions = "Enter your participant ID."
