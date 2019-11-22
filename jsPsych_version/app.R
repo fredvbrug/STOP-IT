@@ -92,15 +92,19 @@ server <- function(input, output) {
       ssd <- round(mean(stopsignal()$SSD))
 
       stopsignal.resp.trials <- reactive({subset(stopsignal(), stopsignal()$response != "undefined")})
-      usRT <- round(mean(stopsignal.resp.trials()$rt))
+      usRTtmp <- stopsignal.resp.trials()$rt 
+      usRTtmp[is.na(usRTtmp)] <- -250      
+      usRT <- round(mean(usRTtmp))
 
       # go trials
       go<-reactive({subset(dataset.focus(), dataset.focus()$signal == 'no')})
       Ngo <- nrow(go())
 
       go.resp.trials <- reactive({subset(go(), go()$response != "undefined")})
-      goRT_all <- round(mean(go.resp.trials()$rt))
-      goRT_sd <- round(sd(go.resp.trials()$rt))
+      goRTtmp <- go.resp.trials()$rt 
+      goRTtmp[is.na(goRTtmp)] <- -250  
+      goRT_all <- round(mean(goRTtmp))
+      goRT_sd <- round(sd(goRTtmp))
 
       goRT.max <- max(go.resp.trials()$rt)
       goRT.adj <- ifelse(go()$response == "undefined", goRT.max, go()$rt)
@@ -112,12 +116,15 @@ server <- function(input, output) {
       go_omission <- 1 - (nrow(go.resp.trials())/Ngo)
       go_error <-  1 - (nrow(go.correct.trials())/nrow(go.resp.trials()))
 
+      premature.trials <- reactive({subset(go(), go()$rt < 0)})
+      go_premature <- (nrow(premature.trials())/Ngo)
+      
       # calculate SSRT
       ssrt <- nth - ssd
 
       # combine everything
       dp.subject <- data.frame(presp, ssd, ssrt, usRT, goRT_all, goRT_correct, goRT_sd,
-                               go_omission, go_error, Nstop, Ngo, subject=i)
+                               go_omission, go_error, go_premature, Nstop, Ngo, subject=i)
       if (exists("dp.all")==FALSE){
         dp.all <- dp.subject
       }else{

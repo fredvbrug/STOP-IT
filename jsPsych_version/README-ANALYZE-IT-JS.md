@@ -37,6 +37,7 @@ In both table panels, there are 11 dependent variables:
 - goRT_sd = intra-subject variability in response latencies (including all go trials with a response)
 - go_omission = proportion of go trials without a response
 - go_error = proportion of incorrect responses on go trials with a response (e.g. the go stimulus required a left response but a right response was executed).
+- go_premature = proportion of premature responses on go trials (i.e. responses executed before the presentation of the go stimulus)
 - Nstop = number of stop trials included in the analyses
 - NGo = number of go trials included in the analyses.
 
@@ -45,6 +46,6 @@ Note: to test the assumption of the independent race model (see Verbruggen et al
 Note: 'go_omission' = the ratio of the number of omitted responses to the total number of go trials
 [i.e., go_omission = 100 * omitted / (correct + error + omitted)] and 'go_error' = the ratio of
 the number of incorrect responses to the number of correct and incorrect responses [i.e., go_error =
-100 * incorrect / (correct + incorrect)]. See e.g. Verbruggen & Logan (2009, JEP:HPP) for a discussion. 
+100 * incorrect / (correct + incorrect)]. See e.g. Verbruggen & Logan (2009, JEP:HPP) for a discussion.
 
 The data shown in the tables can be downloaded via the corresponding buttons. Finally, there is a third download button, which appears in the 'Optional' panel. Users can use this button to transform the STOP-IT jsPsych output to a format that is appropriate for parametric testing. See http://dora.erbe-matzke.com/software.html for further information.
