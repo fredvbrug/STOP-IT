@@ -502,7 +502,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
     conditional_function: function() {
       var last_trial_data = jsPsych.data.get().last(1).values()[0];
       var current_block = block_ind;
-      if (current_block == 0 && last_trial_data['correct']==false) {
+      if (current_block == 0) { // this was previously set to provide feedback only on incorrect trials by adding: && last_trial_data['correct']==false
         return true;
       } else {
         return false;
