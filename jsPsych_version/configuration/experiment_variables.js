@@ -9,8 +9,12 @@
 var fix_stim = 'images/fix.png';
 var go_stim1 = 'images/go_left.png';
 var go_stim2 = 'images/go_right.png';
+var go_stim3 = 'images/go_up.png'; // Mathias, add new go stimuli here
+var go_stim4 = 'images/go_down.png'; // Mathias, add new go stimuli here
 var stop_stim1 = 'images/stop_left.png';
 var stop_stim2 = 'images/stop_right.png';
+var stop_stim3 = 'images/stop_up.png'; // Mathias, add new stop stimuli here
+var stop_stim4 = 'images/stop_down.png'; // Mathias, add new stop stimuli here
 
 
 // define the appropriate response (key) for each stimulus
@@ -18,12 +22,16 @@ var stop_stim2 = 'images/stop_right.png';
 
 var cresp_stim1 = 'leftarrow';
 var cresp_stim2 = 'rightarrow';
+var cresp_stim3 = 'uparrow'; // Mathias, add the new correct responses here
+var cresp_stim4 = 'downarrow'; // Mathias, add the new correct responses here
 
 
 // here you can change the names of the stimuli in the data file
 
 var choice_stim1 = 'left';
 var choice_stim2 = 'right';
+var choice_stim3 = 'up'; // Mathias, add name of your new stimulus here
+var choice_stim4 = 'down'; // Mathias, add name of your new stimulus here
 
 
 // ----- CUSTOMISE THE BASIC DESIGN -----

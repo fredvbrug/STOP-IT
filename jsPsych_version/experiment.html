@@ -73,7 +73,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
 
   // create factorial design from choices(2) and signal(nstim)
   var factors = {
-    stim: [choice_stim1, choice_stim2],
+    stim: [choice_stim1, choice_stim2, choice_stim3, choice_stim4], // Mathias, add the new choice_stim's here
     signal: signalArray,
   };
   var design = jsPsych.randomization.factorial(factors, 1);
@@ -99,6 +99,20 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
         design[i].data.stim = choice_stim2;
         design[i].data.correct_response = cresp_stim2;
         design[i].data.signal = "no";
+      } else if ((design[i].stim == choice_stim3) && (design[i].signal == 'go')) { // Mathias, add the new entries for your new go stimuli here
+        design[i].fixation = fix_stim;
+        design[i].first_stimulus = go_stim3;
+        design[i].second_stimulus = go_stim3;
+        design[i].data.stim = choice_stim3;
+        design[i].data.correct_response = cresp_stim3;
+        design[i].data.signal = "no";
+      } else if ((design[i].stim == choice_stim4) && (design[i].signal == 'go')) {
+        design[i].fixation = fix_stim;
+        design[i].first_stimulus = go_stim4;
+        design[i].second_stimulus = go_stim4;
+        design[i].data.stim = choice_stim4;
+        design[i].data.correct_response = cresp_stim4;
+        design[i].data.signal = "no";
       } else if ((design[i].stim == choice_stim1) && (design[i].signal == 'stop')) {
         design[i].fixation = fix_stim;
         design[i].first_stimulus = go_stim1;
@@ -113,7 +127,21 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
         design[i].data.stim = choice_stim2;
         design[i].data.correct_response = "undefined";
         design[i].data.signal = "yes";
-      }
+      } else if ((design[i].stim == choice_stim3) && (design[i].signal == 'stop')) { // Mathias, add the new entries for your new stop stimuli here
+        design[i].fixation = fix_stim;
+        design[i].first_stimulus = go_stim3;
+        design[i].second_stimulus = stop_stim3;
+        design[i].data.stim = choice_stim3;
+        design[i].data.correct_response = "undefined";
+        design[i].data.signal = "yes";
+      } else if ((design[i].stim == choice_stim4) && (design[i].signal == 'stop')) {
+        design[i].fixation = fix_stim;
+        design[i].first_stimulus = go_stim4;
+        design[i].second_stimulus = stop_stim4;
+        design[i].data.stim = choice_stim4;
+        design[i].data.correct_response = "undefined";
+        design[i].data.signal = "yes";
+      }
       delete design[i].signal; delete design[i].stim;
   };
 
@@ -279,7 +307,7 @@ DESCRIPTION: This is the jsPsych version of the stop-signal task
       return duration
     },
     response_ends_trial: true,
-    choices: [cresp_stim1, cresp_stim2],
+    choices: [cresp_stim1, cresp_stim2, cresp_stim3, cresp_stim4], // Mathias, add the new correct responses here!
     data: jsPsych.timelineVariable('data'),
     // was the response correct? adapt SSD accordingly
     on_finish: function(data) {
