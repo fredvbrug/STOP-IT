@@ -49,7 +49,7 @@ var NdesignReps_exp = 8;
 var NexpBL = 4;
 
 
-// ----- CUSTOMISE THE TIME INTERVALS -----
+// ----- CUSTOMISE THE TIME INTERVALS (in milliseconds)-----
 
 var ITI = 500;    // fixed blank intertrial interval
 var FIX = 250;    // fixed fixation presentation
