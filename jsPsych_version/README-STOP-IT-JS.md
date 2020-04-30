@@ -21,10 +21,10 @@ The main advantages of this version of STOP-IT are (a) the version is platform-i
 
 ## The default stop-signal task
 
-The primary go task is a simple two-choice task in which participants have to discriminate between an arrow pointing to the left and an arrow pointing to the right. On go trials (75% of the trials), participants have to respond as fast and accurate as possible to these arrows. On stop-signal trials (25% of the trials), the arrows are replaced by 'XX' (i.e. a visual stop signal) after a variable delay, instructing participants to cancel their response.
+The primary go task is a simple two-choice task in which participants have to discriminate between a white arrow pointing to the left and a white arrow pointing to the right. On go trials (75% of the trials), participants have to respond as fast and accurate as possible to these arrows. On stop-signal trials (25% of the trials), the arrows turn red (i.e. a visual stop signal) after a variable delay, instructing participants to cancel their response.
 
 ### Stimuli and responses
-The default go stimuli are two green arrows (RGB: 0,158,118). The fixation sign (a black dot; RGB: 0,0,0) and arrows are presented in the center of the screen on a white background. Stimulus size will correspond to the size of the go stimuli in the './images' folder. Occasionally, a visual stop signal ('XX' in black; RGB: 0,0,0) is presented shortly after the stimulus onset in the go task, replacing the go stimulus. Again, the size of the default stop signal will depend on the size of the stop signal in the images folder. Researchers can change all stimuli by uploading new images in the './images' folder. Be aware that the file names should correspond to the names described in the 'experiment_variables.js' file (see below).
+The default go stimuli are two white arrows (RGB: 255, 255, 255), whith a black border (RGB = 0, 0, 0). The fixation sign (a black dot; RGB: 0,0,0) and arrows are presented in the center of the screen on a white background. Stimulus size will correspond to the size of the go stimuli in the './images' folder. Occasionally, a visual stop signal (the arrow turning red; RGB: 255,38,0) is presented shortly after the stimulus onset in the go task, replacing the (white) go stimulus. Again, the size of the default stop signal will depend on the size of the stop signal in the images folder. Researchers can change all stimuli by uploading new images in the './images' folder. Be aware that the file names should correspond to the names described in the 'experiment_variables.js' file (see below).
 
 By default, the response keys are ‘leftarrow’ (for the stimulus associated with the left response) and ‘rightarrow’ (for the stimulus associated with the right response). The experiment is aborted when the ESC key is pressed and the browser window is closed.
 
@@ -99,7 +99,7 @@ var NAME = VALUE. Researchers can change the VALUE but they should not change 'v
 
 The images themselves can be adjusted by replacing the .png files in the image folder. The names of the images and the values defined in this 'experiment_variables.js' file (see below) should correspond.
 
-There are separate image files for the stop signal that will replace the left go stimulus, and the stop signal that will replace the right go stimulus. In the default version, the content of the image files is the same (i.e. two crosses, 'XX'), but researchers can also use different images if wanted (e.g. 'stop_left.png' could be a red left-pointing arrow, and 'stop_right.png' could be a red right-pointing arrow).
+There are separate image files for the stop signal that will replace the left go stimulus, and the stop signal that will replace the right go stimulus.
 
 ##### Design variables
 In the first step, researchers can adjust the proportion of stop signals:
