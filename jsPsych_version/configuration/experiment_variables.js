@@ -6,7 +6,7 @@
 
 // ----- CUSTOMISE THE STIMULI AND RESPONSES -----
 // locate the stimuli that will be used in the experiment
-var fix_stim = 'images/fix.png';
+var fix_stim = 'images/fix_pd.png';
 var go_stim1 = 'images/go_left.png';
 var go_stim2 = 'images/go_right.png';
 var stop_stim1 = 'images/stop_left.png';
