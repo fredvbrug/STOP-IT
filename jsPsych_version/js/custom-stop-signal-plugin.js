@@ -99,7 +99,7 @@ jsPsych.plugins["custom-stop-signal-plugin"] = (function() {
 
     // store response
     var response = {
-      rt: null,
+      rt: undefined,
       key: null
     };
 
