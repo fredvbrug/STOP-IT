@@ -75,10 +75,10 @@ server <- function(input, output) {
       # select the relevant experimental data for the participant
       dataset<-reactive({subset(data(), data()$participantID == i & data()$block_i > 0)})
 
-      # exclude trials when particpant is not focusing
+      # exclude trials when participant is not focusing
       if (input$scr == 'yes'){
         dataset.focus <-reactive({subset(dataset(), dataset()$focus == 'focus'
-                                         && dataset()$Fullscreen == 'yes')})}
+                                         & dataset()$Fullscreen == 'yes')})}
       else{
         dataset.focus <-reactive({subset(dataset(), dataset()$focus == 'focus')})
       }
